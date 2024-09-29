@@ -34,6 +34,7 @@ def determinator_of_operation(list):
     for word in list:
         if word in operations:
             operation = word
+            break
     return operation
 
 def determinator_of_number(number):     #Принимает список
@@ -41,10 +42,17 @@ def determinator_of_number(number):     #Принимает список
     if len(number) == 1:
         return (from_list_to_integer(helper_of_determinator(number)))
     else:
-        number_split_first_part, number_split_second_part = [str(word) for word in number]
-        return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)))
-
-
+        if "минус" in number:
+            number.remove("минус")
+            if len(number) == 2:
+                number_split_first_part, number_split_second_part = [str(word) for word in number]
+                return (-from_list_to_integer(helper_of_determinator(number_split_first_part)) - from_list_to_integer(helper_of_determinator(number_split_second_part)))
+            else:
+                number_split_first_part = [str(word) for word in number]
+                return (-from_list_to_integer(helper_of_determinator(number_split_first_part)))
+        else:
+            number_split_first_part, number_split_second_part = [str(word) for word in number]
+            return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)))
 
 #Как вообще задавать число?
 numbers_from_0_to_9 = {"ноль":0, "один":1, "два":2,
@@ -61,6 +69,10 @@ numbers_mod10_equal_zero = {"двадцать":20, "тридцать":30, "со�
                             "пятьдесят":50,"шестьдесят":60, "семьдесят":70,
                             "восемьдесят":80, "девяносто":90}
 
+numbers_used_in_float = {"одна":1, "две":2, "три":3,
+                         "четыре":4, "пять":5, "шесть":6,
+                         "семь":7, "восемь":8, "девять":9}          #При делении нужно
+
 operations = ["плюс", "минус", "умножить"]
 
 print("Добро пожаловать в калькулятор! Введите выражение в формате: {первое число} {операция} {второе число}\nПример: \"двадцать три минус девятнадцать\"")
@@ -75,7 +87,16 @@ while flag == False:
         second_num = words[(index_of_operation + 1):]
         if ((2 <= len(first_num) + len(second_num) <= 4) and (operation is not None)):
             flag = True
+    elif (words.count("плюс") + words.count("минус") + words.count("умножить") == 2) and (words.count("минус") > 0):
+        operation = determinator_of_operation(words)
+        index_of_operation = words.index(operation)
+        first_num = words[:index_of_operation]
+        second_num = words[(index_of_operation + 1):]
+        if ((3 <= len(first_num) + len(second_num) <= 5) and (operation is not None)):
+            flag = True
     else:
         print("Неправильный формат ввода! Введите еще раз: ")
 
 print(f"Ваш результат: {calculate(first_num, operation, second_num)}")
+
+#ДОП ЗАДАНИЯ - 5
