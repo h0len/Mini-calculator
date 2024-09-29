@@ -79,7 +79,7 @@ print("Добро пожаловать в калькулятор! Введите
 flag = False
 while flag == False:
     expression = input().lower()
-    words = list(filter(None, exspression.split(" ")))
+    words = list(filter(None, expression.split(" ")))
     if (words.count("плюс") + words.count("минус") + words.count("умножить") == 1):
         operation = determinator_of_operation(words)
         index_of_operation = words.index(operation)
