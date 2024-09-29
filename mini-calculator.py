@@ -1,14 +1,14 @@
 import sys
 
-def calculate(first_num, operation, second_num):
-    """Функция, принимающая три значения: первое число, операцию и второе число. Она делает определяет, какую операцию нужно сделать и выполняет ее."""
+def calculate(first_number, operationn, second_number):
+    """Функция, принимающая три значения: первое число, операцию и второе число. Она определяет, какую операцию нужно сделать и выполняет ее."""
     try:
-        if operation == "плюс":
-            return determinator_of_number(first_num) + determinator_of_number(second_num)
-        elif operation == "минус":
-            return determinator_of_number(first_num) - determinator_of_number(second_num)
+        if operationn == "плюс":
+            return determinator_of_number(first_number) + determinator_of_number(second_number)
+        elif operationn == "минус":
+            return determinator_of_number(first_number) - determinator_of_number(second_number)
         else:
-            return determinator_of_number(first_num) * determinator_of_number(second_num)
+            return determinator_of_number(first_number) * determinator_of_number(second_number)
     except TypeError:
         print("Изначально были неправильно введены значения!")
         sys.exit(0)
@@ -21,7 +21,7 @@ def from_list_to_string(list):
     return string_
 
 def from_list_to_integer(list):
-    """Функция для перевода списка в целочисленные формат."""
+    """Функция для перевода списка в целочисленный формат."""
     for element in list:
         return int(element)
 
@@ -78,21 +78,21 @@ operations = ["плюс", "минус", "умножить"]
 print("Добро пожаловать в калькулятор! Введите выражение в формате: {первое число} {операция} {второе число}\nПример: \"двадцать три минус девятнадцать\"")
 flag = False
 while flag == False:
-    exspression = input().lower()
+    expression = input().lower()
     words = list(filter(None, exspression.split(" ")))
     if (words.count("плюс") + words.count("минус") + words.count("умножить") == 1):
         operation = determinator_of_operation(words)
         index_of_operation = words.index(operation)
         first_num = words[:index_of_operation]
         second_num = words[(index_of_operation + 1):]
-        if ((2 <= len(first_num) + len(second_num) <= 4) and (operation is not None)):
+        if ((2 <= len(first_num) + len(second_num) <= 4) and (operation is not None) and (len(first_num) != 0) and (len(second_num) != 0)):
             flag = True
     elif (words.count("плюс") + words.count("минус") + words.count("умножить") == 2) and (words.count("минус") > 0):
         operation = determinator_of_operation(words)
         index_of_operation = words.index(operation)
         first_num = words[:index_of_operation]
         second_num = words[(index_of_operation + 1):]
-        if ((3 <= len(first_num) + len(second_num) <= 5) and (operation is not None)):
+        if ((3 <= len(first_num) + len(second_num) <= 5) and (operation is not None) and (len(first_num) != 0) and (len(second_num) != 0)):
             flag = True
     else:
         print("Неправильный формат ввода! Введите еще раз: ")
