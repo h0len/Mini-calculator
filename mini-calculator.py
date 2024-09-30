@@ -64,6 +64,7 @@ def determinator_of_number(number):     #Принимает список
             return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)))
 
 def get_key_by_value(dictionary, value):
+    """Функция для получения ключа по значению в словаре."""
     for key, v in dictionary.items():
         if v == value:
             return key
