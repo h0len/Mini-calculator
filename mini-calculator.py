@@ -7,10 +7,9 @@ def calculate(first_number, operationn, second_number):
             return undo_helper_of_determinator((determinator_of_number(first_number)) + determinator_of_number(second_number))
         elif operationn == "минус":
             return undo_helper_of_determinator((determinator_of_number(first_number)) - determinator_of_number(second_number))
-        #ДЕЛИТЬ НЕ РАБОТАЕТ
         elif operationn == "разделить":
+            print(first_number, second_number, determinator_of_number(first_number), determinator_of_number(second_number), (determinator_of_number(first_number)) / determinator_of_number(second_number))
             return undo_helper_of_determinator((determinator_of_number(first_number)) / determinator_of_number(second_number))
-
         else:
             return undo_helper_of_determinator((determinator_of_number(first_number)) * determinator_of_number(second_number))
     except TypeError:
@@ -46,7 +45,7 @@ def determinator_of_operation(list):
 def determinator_of_number(number):     #Принимает список
     """Функция для перевода числа из списка в целочисленный формат."""
     if len(number) == 1:
-        if from_list_to_integer(helper_of_determinator(number)) == 100:
+        if number[0] == "ноль":
             return 0
         else:
             return (from_list_to_integer(helper_of_determinator(number)))
@@ -70,17 +69,52 @@ def get_key_by_value(dictionary, value):
             return key
     return None
 
-def undo_helper_of_determinator(integer):
-    """Функция для перевода числа из целочисленного формата в текстовый."""
+def undo_helper_of_determinator_for_integers_until_1000(integer):
+    if integer == 0:
+        return "ноль"
     if 1 <= integer < 20:
-        return " ".join(list(filter(None, [get_key_by_value(numbers_from_0_to_9, integer),
-                                  get_key_by_value(numbers_from_10_to_19, integer)])))
+        return " ".join(list(filter(None, [get_key_by_value(numbers_from_0_to_9, integer), get_key_by_value(numbers_from_10_to_19, integer)])))
+    if 20 <= integer < 100:
+        return " ".join(list(filter(None, [get_key_by_value(numbers_mod10_equal_zero, (integer - (integer % 10))), get_key_by_value(numbers_from_0_to_9, (integer % 10))])))
+    if 100 <= integer < 1000:
+        return " ".join(list(filter(None, [get_key_by_value(numbers_mod100_equal_zero, integer - (integer % 100)), get_key_by_value(numbers_mod10_equal_zero, ((integer - ((integer // 100) * 100) - integer % 10))), get_key_by_value(numbers_from_0_to_9, (integer % 10))])))
+
+def undo_helper_of_determinator(integer_or_float):
+    """Функция для перевода числа из целочисленного формата в текстовый."""
+    result = ""
+    if int(integer_or_float) != (integer_or_float):
+        str_integer_or_float = str(integer_or_float)
+        integer_part, decimal_part = str_integer_or_float.split('.')
+        integer_part = int(integer_part)
+        if integer_part == 0:
+            result += "ноль"
+        elif 1 <= integer_part < 20:
+            result +=  " ".join(list(filter(None, [get_key_by_value(numbers_from_0_to_9, integer_part),
+                                               get_key_by_value(numbers_from_10_to_19, integer_part)])))
+        elif 20 <= integer_part < 100:
+            result += " ".join(list(filter(None, [get_key_by_value(numbers_mod10_equal_zero, (integer_part - (integer_part % 10))),
+                                               get_key_by_value(numbers_from_0_to_9, integer_part % 10)])))
+        elif 100 <= integer_part < 1000:
+            result += " ".join(list(filter(None, [get_key_by_value(numbers_mod100_equal_zero, integer_part // 100),
+                                               get_key_by_value(numbers_mod10_equal_zero, (integer_part - ((integer_part // 100) * 100) - (integer_part % 10))),
+                                               get_key_by_value(numbers_from_0_to_9, (integer_part % 10))])))
+        if len(decimal_part) <= 3:
+            decimal_part = decimal_part.ljust(3, '0')
+            if len(decimal_part) == 1 or decimal_part[1:] == "00":
+                result += f" и {undo_helper_of_determinator_for_integers_until_1000(int(decimal_part[0]))} десятая(ых)"
+            elif len(decimal_part) == 2 or decimal_part[2] == "0":
+                result += f" и {undo_helper_of_determinator_for_integers_until_1000(int(decimal_part[:2]))} сотая(ых)"
+            else:
+                result += f" и {undo_helper_of_determinator_for_integers_until_1000(int(decimal_part))} тысячная(ых)"
+        else:
+            decimal_part = decimal_part[:3]
+            result += f" и {undo_helper_of_determinator_for_integers_until_1000(int(decimal_part))} тысячная(ых)"
+        return result
     else:
-        return " ".join(list(filter(None, [get_key_by_value(numbers_mod10_equal_zero, (integer - (integer % 10))),
-                                  get_key_by_value(numbers_from_0_to_9, integer % 10),])))
+        return undo_helper_of_determinator_for_integers_until_1000(integer_or_float)
 
 #Как вообще задавать число?
-numbers_from_0_to_9 = {"ноль":100, "один":1, "два":2,
+numbers_from_0_to_9 = {"ноль":0, "один":1, "два":2,
                         "три":3, "четыре":4, "пять":5,
                         "шесть":6, "семь":7, "восемь":8,
                         "девять":9}
@@ -94,9 +128,13 @@ numbers_mod10_equal_zero = {"двадцать":20, "тридцать":30, "со�
                             "пятьдесят":50,"шестьдесят":60, "семьдесят":70,
                             "восемьдесят":80, "девяносто":90}
 
-numbers_used_in_float = {"одна":1, "две":2, "три":3,
+numbers_used_in_float = {"ноль":0, "одна":1, "две":2, "три":3,
                          "четыре":4, "пять":5, "шесть":6,
-                         "семь":7, "восемь":8, "девять":9}          #При делении нужно
+                         "семь":7, "восемь":8, "девять":9}
+
+numbers_mod100_equal_zero = {"сто":100, "двести":200, "триста":300,
+                             "четыреста":400, "пятьсот":500, "шестьсот":600,
+                             "семьсот":700, "восемьсот":800, "девятьсот":900}
 
 operations = ["плюс", "минус", "умножить", "разделить"]
 
