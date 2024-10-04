@@ -18,11 +18,16 @@ def calculate(first_number, operation, second_number):
                 return "минус " + undo_helper_of_determinator(abs((determinator_of_number(first_number)) / determinator_of_number(second_number)))
             else:
                 return undo_helper_of_determinator((determinator_of_number(first_number)) / determinator_of_number(second_number))
-        else:
+        elif operation == "умножить":
             if (determinator_of_number(first_number)) * (determinator_of_number(second_number)) < 0:
                 return "минус " + undo_helper_of_determinator(abs((determinator_of_number(first_number)) * (determinator_of_number(second_number))))
             else:
                 return undo_helper_of_determinator((determinator_of_number(first_number)) * (determinator_of_number(second_number)))
+        else:
+            if (determinator_of_number(first_number)) % (determinator_of_number(second_number)) < 0:
+                return "минус " + undo_helper_of_determinator(abs((determinator_of_number(first_number)) % (determinator_of_number(second_number))))
+            else:
+                return undo_helper_of_determinator((determinator_of_number(first_number)) % (determinator_of_number(second_number)))
     except TypeError:
         print("Изначально были неправильно введены значения!")
         sys.exit(0)
@@ -41,9 +46,12 @@ def from_list_to_integer(list):
 
 def helper_of_determinator(listt):
     """Функция для составления списка из одного элемента. В данной программе, она возвращает число(первое или второе), которое было введено пользователем."""
-    return list(filter(None, [numbers_from_0_to_9.get(from_list_to_string(listt)),
+    return list(set(filter(None, [numbers_from_0_to_9.get(from_list_to_string(listt)),
+                              numbers_used_in_thousands.get(from_list_to_string(listt)),
                               numbers_from_10_to_19.get(from_list_to_string(listt)),
-                              numbers_mod10_equal_zero.get(from_list_to_string(listt))]))
+                              numbers_mod10_equal_zero.get(from_list_to_string(listt)),
+                              numbers_mod100_equal_zero.get(from_list_to_string(listt))])))
+
 
 def determinator_of_operation(list):
     """Функция для определения операции, и возврата ее."""
@@ -52,6 +60,29 @@ def determinator_of_operation(list):
             operation = word
             break
     return operation
+
+def decimal_part_determinator(list):
+    tenth = ["десятых", "десятая", "десятые"]
+    hundr = ["сотых", "сотая", "сотые"]
+    thous = ["тысячных", "тысячная", "тысячные"]
+    while True:
+        for element in tenth:
+            for elem in list:
+                if element == elem:
+                    list.remove(elem)
+                    return determinator_of_number(list) / 10
+        for element in hundr:
+            for elem in list:
+                if element == elem:
+                    list.remove(elem)
+                    return determinator_of_number(list) / 100
+        for element in thous:
+            for elem in list:
+                if element == elem:
+                    list.remove(elem)
+                    return determinator_of_number(list) / 1000
+        print("Неверное задана десятичная часть!")
+        sys.exit(0)
 
 def determinator_of_number(number):
     """Функция для перевода числа из списка в целочисленный формат."""
@@ -62,15 +93,42 @@ def determinator_of_number(number):
             return (from_list_to_integer(helper_of_determinator(number)))
     else:
         if "минус" in number:
-            if len(number[1:]) == 2:
-                number_split_first_part, number_split_second_part = [str(word) for word in number[1:]]
-                return (-from_list_to_integer(helper_of_determinator(number_split_first_part)) - from_list_to_integer(helper_of_determinator(number_split_second_part)))
+            if "и" in number:
+                number_first_part, number_second_part = number[1:number.index("и")], number[number.index("и") + 1:]
+                number_second_part_int = -decimal_part_determinator(number_second_part)
+                if number_first_part == 1:
+                    number_first_part_int = -from_list_to_integer(helper_of_determinator(number_first_part))
+                    return number_first_part_int + number_second_part_int
+                else:
+                    number_first_first_part = number_first_part[0]
+                    number_first_second_part = number_first_part[1]
+                    number_first_first_part_int = -from_list_to_integer(helper_of_determinator(number_first_first_part))
+                    number_first_second_part_int = -from_list_to_integer(
+                        helper_of_determinator(number_first_second_part))
+                    return number_first_first_part_int + number_first_second_part_int + number_second_part_int
             else:
-                number_split_first_part = [str(word) for word in number[1:]]
-                return (-from_list_to_integer(helper_of_determinator(number_split_first_part)))
+                if len(number[1:]) == 2:
+                    number_split_first_part, number_split_second_part = [str(word) for word in number[1:]]
+                    return (-from_list_to_integer(helper_of_determinator(number_split_first_part)) - from_list_to_integer(helper_of_determinator(number_split_second_part)))
+                else:
+                    number_split_first_part = [str(word) for word in number[1:]]
+                    return (-from_list_to_integer(helper_of_determinator(number_split_first_part)))
         else:
-            number_split_first_part, number_split_second_part = [str(word) for word in number]
-            return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)))
+            if "и" in number:
+                number_first_part, number_second_part = number[:number.index("и")], number[number.index("и") + 1:]
+                number_second_part_int = decimal_part_determinator(number_second_part)
+                if number_first_part == 1:
+                    number_first_part_int = from_list_to_integer(helper_of_determinator(number_first_part))
+                    return number_first_part_int + number_second_part_int
+                else:
+                    number_first_first_part = number_first_part[0]
+                    number_first_second_part = number_first_part[1]
+                    number_first_first_part_int = (from_list_to_integer(helper_of_determinator(number_first_first_part)))
+                    number_first_second_part_int = from_list_to_integer(helper_of_determinator(number_first_second_part))
+                    return number_first_first_part_int + number_first_second_part_int + number_second_part_int
+            else:
+                number_split_first_part, number_split_second_part = [str(word) for word in number]
+                return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)))
 
 def get_key_by_value(dictionary, value):
     """Функция для получения ключа по значению в словаре."""
@@ -181,26 +239,26 @@ numbers_to_thousands = {"одна тысяча": 1, "две тысячи": 2, "�
                         "четыре тысячи": 4, "пять тысяч": 5, "шесть тысяч": 6,
                         "семь тысяч": 7, "восемь тысяч": 8, "девять тысяч": 9}
 
-operations = ["плюс", "минус", "умножить", "разделить"]
+operations = ["плюс", "минус", "умножить", "разделить", "остаток"]
 
 print("Добро пожаловать в калькулятор! Введите выражение в формате: {первое число} {операция} {второе число}\nПример: \"двадцать три минус девятнадцать\"")
 flag = False
 while flag == False:
     expression = input().lower()
     words = list(filter(None, expression.split(" ")))
-    if (words.count("плюс") + words.count("минус") + words.count("умножить") + words.count("разделить") == 1):
+    if (words.count("плюс") + words.count("минус") + words.count("умножить") + words.count("разделить") + words.count("остаток")== 1):
         operation = determinator_of_operation(words)
         index_of_operation = words.index(operation)
         first_num = words[:index_of_operation]
         second_num = words[(index_of_operation + 1):]
-        if ((2 <= len(first_num) + len(second_num) <= 4) and (operation is not None) and (0 < len(first_num) < 3) and (0 < len(second_num) < 3)):
+        if ((2 <= len(first_num) + len(second_num) <= 14) and (operation is not None) and (0 < len(first_num) < 8) and (0 < len(second_num) < 8)):
             flag = True
-            if ((operation == "разделить") and (from_list_to_string(second_num) == "ноль")):
+            if ((operation == "разделить" or operation == "остаток") and (from_list_to_string(second_num) == "ноль")):
                 flag = False
                 print("Делить на ноль нельзя! Введите запрос корректно: ")
         else:
             print("Неправильный формат ввода! Введите еще раз: ")
-    elif (words.count("плюс") + words.count("минус") + words.count("умножить") + words.count("разделить") >= 2) and (words.count("минус") > 0):
+    elif (words.count("плюс") + words.count("минус") + words.count("умножить") + words.count("разделить") + words.count("остаток") >= 2) and (words.count("минус") > 0):
         if words.index("минус") == 0:
             operation = determinator_of_operation(words[1:])
             index_of_operation = words[1:].index(operation) + 1
@@ -211,9 +269,9 @@ while flag == False:
             index_of_operation = words.index(operation)
             first_num = words[:index_of_operation]
             second_num = words[(index_of_operation + 1):]
-        if (3 <= len(first_num) + len(second_num) <= 6) and (operation is not None) and (0 < len(first_num) < 4) and (0 < len(second_num) < 4):
+        if (3 <= len(first_num) + len(second_num) <= 16) and (operation is not None) and (0 < len(first_num) < 9) and (0 < len(second_num) < 9):
             flag = True
-            if (operation == "разделить") and (from_list_to_string(second_num) == "ноль"):
+            if (operation == "разделить" or operation == "остаток") and (from_list_to_string(second_num) == "ноль"):
                 flag = False
                 print("Делить на ноль нельзя! Введите запрос корректно: ")
         else:
