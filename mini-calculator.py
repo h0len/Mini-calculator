@@ -96,15 +96,14 @@ def determinator_of_number(number):
             if "и" in number:
                 number_first_part, number_second_part = number[1:number.index("и")], number[number.index("и") + 1:]
                 number_second_part_int = -decimal_part_determinator(number_second_part)
-                if number_first_part == 1:
+                if len(number_first_part) == 1:
                     number_first_part_int = -from_list_to_integer(helper_of_determinator(number_first_part))
                     return number_first_part_int + number_second_part_int
                 else:
                     number_first_first_part = number_first_part[0]
                     number_first_second_part = number_first_part[1]
                     number_first_first_part_int = -from_list_to_integer(helper_of_determinator(number_first_first_part))
-                    number_first_second_part_int = -from_list_to_integer(
-                        helper_of_determinator(number_first_second_part))
+                    number_first_second_part_int = -from_list_to_integer(helper_of_determinator(number_first_second_part))
                     return number_first_first_part_int + number_first_second_part_int + number_second_part_int
             else:
                 if len(number[1:]) == 2:
