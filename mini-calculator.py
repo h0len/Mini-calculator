@@ -85,6 +85,7 @@ def determinator_of_operation(list):
     return operation
 
 def decimal_part_determinator(list):
+    """Функция для перевода десятичной части числа из текстового формата в численный."""
     tenth = ["десятых", "десятая", "десятые"]
     hundr = ["сотых", "сотая", "сотые"]
     thous = ["тысячных", "тысячная", "тысячные"]
