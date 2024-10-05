@@ -1,4 +1,5 @@
 import sys
+from math import factorial
 
 def calculate(first_number, operation, second_number):
     """Функция, принимающая три значения: первое число, операцию и второе число. Она определяет, какую операцию нужно сделать и выполняет ее."""
@@ -23,6 +24,28 @@ def calculate(first_number, operation, second_number):
                 return "минус " + undo_helper_of_determinator(abs((determinator_of_number(first_number)) * (determinator_of_number(second_number))))
             else:
                 return undo_helper_of_determinator((determinator_of_number(first_number)) * (determinator_of_number(second_number)))
+        elif operation == "размещение":
+            try:
+                return undo_helper_of_determinator(factorial(determinator_of_number(first_number)) / factorial(determinator_of_number(first_number) - determinator_of_number(second_number)))
+            except ValueError:
+                print("Неверный ввод!")
+                sys.exit(0)
+        elif operation == "сочетание":
+            try:
+                return undo_helper_of_determinator(factorial(determinator_of_number(first_number)) / (factorial(determinator_of_number(second_number)) * factorial(determinator_of_number(first_number) - determinator_of_number(second_number))))
+            except ValueError:
+                print("Неверный ввод!")
+                sys.exit(0)
+        elif operation == "перестановка":
+            if first_number == second_number:
+                print("Неверный ввод!")
+                sys.exit(0)
+            else:
+                try:
+                    return undo_helper_of_determinator(factorial(determinator_of_number(first_number)))
+                except ValueError:
+                    print("Неверный ввод!")
+                    sys.exit(0)
         else:
             if (determinator_of_number(first_number)) % (determinator_of_number(second_number)) < 0:
                 return "минус " + undo_helper_of_determinator(abs((determinator_of_number(first_number)) % (determinator_of_number(second_number))))
@@ -249,14 +272,17 @@ numbers_to_thousands = {"одна тысяча": 1, "две тысячи": 2, "�
                         "четыре тысячи": 4, "пять тысяч": 5, "шесть тысяч": 6,
                         "семь тысяч": 7, "восемь тысяч": 8, "девять тысяч": 9}
 
-operations = ["плюс", "минус", "умножить", "разделить", "остаток"]
+operations = ["плюс", "минус", "умножить", "разделить", "остаток", "размещение", "сочетание", "перестановка"]
 
-print("Добро пожаловать в калькулятор! Введите выражение в формате: {первое число} {операция} {второе число}\nПример: \"двадцать три минус девятнадцать\"")
+print("Добро пожаловать в калькулятор! Введите выражение в формате: {первое число} {операция} {второе число}\nПример: \"двадцать три минус девятнадцать\""
+      "\nОперации: \"плюс\", \"минус\", \"умножить\", \"разделить\", \"остаток\""
+      "\nВНИМАНИЕ: при вводе операции перестановки, вводите запрос в формате \"{a}перестановка{a}\"")
+
 flag = False
 while flag == False:
     expression = input().lower()
     words = list(filter(None, expression.split(" ")))
-    if (words.count("плюс") + words.count("минус") + words.count("умножить") + words.count("разделить") + words.count("остаток")== 1):
+    if (words.count("плюс") + words.count("минус") + words.count("умножить") + words.count("разделить") + words.count("остаток") + words.count("размещение") + words.count("сочетание") + words.count("перестановка") == 1):
         operation = determinator_of_operation(words)
         index_of_operation = words.index(operation)
         first_num = words[:index_of_operation]
@@ -268,7 +294,7 @@ while flag == False:
                 print("Делить на ноль нельзя! Введите запрос корректно: ")
         else:
             print("Неправильный формат ввода! Введите еще раз: ")
-    elif (words.count("плюс") + words.count("минус") + words.count("умножить") + words.count("разделить") + words.count("остаток") >= 2) and (words.count("минус") > 0):
+    elif (words.count("плюс") + words.count("минус") + words.count("умножить") + words.count("разделить") + words.count("остаток") + words.count("размещение") + words.count("сочетание") + words.count("перестановка")>= 2) and (words.count("минус") > 0):
         if words.index("минус") == 0:
             operation = determinator_of_operation(words[1:])
             index_of_operation = words[1:].index(operation) + 1
@@ -291,4 +317,4 @@ while flag == False:
 
 print(f"Ваш результат: {calculate(first_num, operation, second_num)}")
 
-#ДОП ЗАДАНИЯ - 5, 1
+#ДОП ЗАДАНИЯ - 5, 1, 9  = 1б + 2б + 1б = 4б!! =)
