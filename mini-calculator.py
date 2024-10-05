@@ -126,8 +126,15 @@ def determinator_of_number(number):
                     number_first_second_part_int = from_list_to_integer(helper_of_determinator(number_first_second_part))
                     return number_first_first_part_int + number_first_second_part_int + number_second_part_int
             else:
-                number_split_first_part, number_split_second_part, number_split_third_part = [str(word) for word in number]
-                return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)) + from_list_to_integer(helper_of_determinator(number_split_third_part)))
+                if len(number) == 1:
+                    number_split_first_part = [str(word) for word in number]
+                    return (from_list_to_integer(helper_of_determinator(number_split_first_part)))
+                elif len(number) == 2:
+                    number_split_first_part, number_split_second_part = [str(word) for word in number]
+                    return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)))
+                else:
+                    number_split_first_part, number_split_second_part, number_split_third_part = [str(word) for word in number]
+                    return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)) + from_list_to_integer(helper_of_determinator(number_split_third_part)))
 
 def get_key_by_value(dictionary, value):
     """Функция для получения ключа по значению в словаре."""
