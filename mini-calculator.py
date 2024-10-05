@@ -50,7 +50,7 @@ def helper_of_determinator(listt):
                               numbers_used_in_thousands.get(from_list_to_string(listt)),
                               numbers_from_10_to_19.get(from_list_to_string(listt)),
                               numbers_mod10_equal_zero.get(from_list_to_string(listt)),
-                              numbers_mod100_equal_zero.get(from_list_to_string(listt))])))
+                              numbers_mod100_equal_zero_help.get(from_list_to_string(listt))])))
 
 
 def determinator_of_operation(list):
@@ -116,7 +116,7 @@ def determinator_of_number(number):
             if "и" in number:
                 number_first_part, number_second_part = number[:number.index("и")], number[number.index("и") + 1:]
                 number_second_part_int = decimal_part_determinator(number_second_part)
-                if number_first_part == 1:
+                if len(number_first_part) == 1:
                     number_first_part_int = from_list_to_integer(helper_of_determinator(number_first_part))
                     return number_first_part_int + number_second_part_int
                 else:
@@ -126,8 +126,8 @@ def determinator_of_number(number):
                     number_first_second_part_int = from_list_to_integer(helper_of_determinator(number_first_second_part))
                     return number_first_first_part_int + number_first_second_part_int + number_second_part_int
             else:
-                number_split_first_part, number_split_second_part = [str(word) for word in number]
-                return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)))
+                number_split_first_part, number_split_second_part, number_split_third_part = [str(word) for word in number]
+                return (from_list_to_integer(helper_of_determinator(number_split_first_part)) + from_list_to_integer(helper_of_determinator(number_split_second_part)) + from_list_to_integer(helper_of_determinator(number_split_third_part)))
 
 def get_key_by_value(dictionary, value):
     """Функция для получения ключа по значению в словаре."""
@@ -168,7 +168,7 @@ def undo_helper_of_determinator(integer_or_float):
         if integer_part == 0:
             result += "ноль"
         elif 1 <= integer_part < 20:
-            result +=  " ".join(list(filter(None, [get_key_by_value(numbers_from_0_to_9, integer_part),
+            result += " ".join(list(filter(None, [get_key_by_value(numbers_from_0_to_9, integer_part),
                                                    get_key_by_value(numbers_from_10_to_19, integer_part)])))
         elif 20 <= integer_part < 100:
             if integer_part % 10 == 0:
@@ -186,7 +186,7 @@ def undo_helper_of_determinator(integer_or_float):
                                                       get_key_by_value(numbers_from_0_to_9, (integer_part % 10))])))
         elif 1000 <= integer_part < 10000:
                 if (len(list(filter(None, [get_key_by_value(numbers_used_in_thousands, int(str(integer_part)[0])), get_key_by_value(numbers_mod100_equal_zero, int(str(integer_part)[1])), get_key_by_value(numbers_mod10_equal_zero, int(str(integer_part)[1:]) - integer_part % 10), get_key_by_value(numbers_from_0_to_9, int(str(integer_part)[3]))]))) > 1) and (integer_part % 10 == 0):
-                    result +=  " ".join(list(filter(None, [get_key_by_value(numbers_to_thousands, int(str(integer_part)[0])),
+                    result += " ".join(list(filter(None, [get_key_by_value(numbers_to_thousands, int(str(integer_part)[0])),
                                                            get_key_by_value(numbers_mod100_equal_zero, int(str(integer_part)[1])),
                                                            get_key_by_value(numbers_mod10_equal_zero, int(str(integer_part)[1:]) - integer_part % 10 - int(str(integer_part)[1]) * 100)])))
                 else:
@@ -234,6 +234,10 @@ numbers_mod100_equal_zero = {"сто": 1, "двести": 2, "триста": 3,
                              "четыреста": 4, "пятьсот": 5, "шестьсот": 6,
                              "семьсот": 7, "восемьсот": 8, "девятьсот": 9}
 
+numbers_mod100_equal_zero_help = {"сто": 100, "двести": 200, "триста": 300,
+                             "четыреста": 400, "пятьсот": 500, "шестьсот": 600,
+                             "семьсот": 700, "восемьсот": 800, "девятьсот": 900}
+
 numbers_to_thousands = {"одна тысяча": 1, "две тысячи": 2, "три тысячи": 3,
                         "четыре тысячи": 4, "пять тысяч": 5, "шесть тысяч": 6,
                         "семь тысяч": 7, "восемь тысяч": 8, "девять тысяч": 9}
@@ -280,4 +284,4 @@ while flag == False:
 
 print(f"Ваш результат: {calculate(first_num, operation, second_num)}")
 
-#ДОП ЗАДАНИЯ - 5, 1(пока что нет)
+#ДОП ЗАДАНИЯ - 5, 1
